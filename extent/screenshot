@@ -1,0 +1,156 @@
+package runner;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+
+import utils.Base;
+
+public class TestRunner extends Base {
+    Logger logger = Logger.getLogger(TestRunner.class);
+    ExtentReports extent;
+    ExtentTest test;
+    @BeforeClass
+    public void bC(){
+        extent = new ExtentReports();
+        ExtentSparkReporter spark = new ExtentSparkReporter(new File("./reports/report.html"));
+        extent.attachReporter(spark);
+    }
+
+    @AfterClass
+    public void aC(){
+        extent.flush();
+    }
+
+    @BeforeMethod
+    public void bM() {
+        openBrowser();
+    }
+
+    @AfterMethod
+    public void aM() {
+        driver.quit();
+    }
+
+    @Test
+    public void test1(){
+        driver.navigate().refresh();
+        try {
+        Thread.sleep(2000);
+        test = extent.createTest("jkgj");
+        test.pass("loaded");
+            Thread.sleep(2000);
+
+        driver.findElement(By.id("train-link")).click();
+        String url = driver.getCurrentUrl();
+        Assert.assertTrue(url.contains("trains"));
+        // driver.navigate().back();
+        // Thread.sleep(2000);
+            driver.findElement(By.xpath("//*[@id=\"root\"]/div[1]/div/div[3]/ul/li/div[2]/span")).click();
+            Thread.sleep(2000);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test2(){
+        // select
+        Select select = new Select(driver.findElement(By.id("ss")));
+        select.selectByIndex(0);
+
+        // alert
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
+        
+        try {
+            driver.findElement(By.xpath("//div[@id='footer-container']//a[5]")).click();
+            Thread.sleep(500);
+            driver.findElement(By.xpath("//*[@id=\"footer-routes\"]/div[1]/div[2]/div/div[7]/a")).click();
+
+            Thread.sleep(2000);
+            switchToNewWindow(driver.getWindowHandle());
+            
+            screenshot = (TakesScreenshot) driver;
+            File file = screenshot.getScreenshotAs(OutputType.FILE);
+            
+            logger.info("captures screenshot");
+            try {
+                FileUtils.copyFile(file, new File("screenshots/img.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void switchToNewWindow(String parent) {
+        try {
+            Set<String> windowHandles = driver.getWindowHandles();
+            for (String windowHandle : windowHandles) {
+                if (!windowHandle.equals(parent)) {
+                    driver.switchTo().window(windowHandle);
+                }
+            }
+        } catch (Exception e) {
+            // Handle or rethrow the exception here
+            e.printStackTrace();
+        }
+    }
+
+
+    public void select(){
+    }
+}
+
+
+
+
+ExtentReports report;
+ExtentTest test;
+
+@BeforeClass
+public void bc(){
+      report= new ExtentReports();
+      ExtentSparkReporter spark=new ExtentSparkReporter(new File("./reports/report.html"));
+      extent.attachReporter(spark);
+}
+@afterclass
+public void ac(){
+    extent.flush();
+}
+@Test
+public void test(){
+    test=extent.createTest("asd");
+    test.pass("hj");
+    screenshot=(TakesScreenshot)driver;
+    File file=screenshot.getScreenshotAs(OutputType.FILE);
+    FileUtils.copyFile(file,new File("screenshot/img.png"));
+
+
+    screenshot=(TakesScreenshot)driver;
+    File file=screenshot.getScreenshotAs(OutputType.FILE);
+    FileUtils.copyFile(file,new file("screenshot/img.png"));
+}
