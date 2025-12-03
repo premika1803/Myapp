@@ -190,3 +190,59 @@ public class TestRunner extends Base {
             driver.quit();
         }
     }
+
+//extent report,log,screenshrt
+package runner;
+
+
+import org.openqa.selenium.By;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+
+import utils.Base;
+import utils.LoggerHandler;
+import utils.Reporter;
+import utils.Screenshot;
+
+public class TestRunner extends Base {
+    ExtentReports report;
+    ExtentReports extent;
+    ExtentTest test;
+    @BeforeMethod
+    public void beforeMethod(){
+        openBrowser();
+        report=Reporter.generateExtentReport("reportname");
+		//own
+        ExtentSparkReporter report=new ExtentSparkReporter("/home/coder/project/workspace/Project/reports1");
+        extent = new ExtentReports();
+        extent.attachReporter(report);
+    }
+    @Test
+    public void test(){
+        test=report.createTest("reporttest");
+        test.info("test started");
+        LoggerHandler.info("click on signin");
+       driver.get("https://agronetto.com");
+       driver.manage().window().maximize();
+       driver.findElement(By.xpath("//*[@id=\"container\"]/div[1]/header/div/div/div[4]/div[2]")).click();
+       Screenshot.captureScreenShot("reader");
+       LoggerHandler.info("click on Blog");
+       Reporter.attachScreenshotToReport("Screenshots", test, "saved");
+		//own
+       ExtentTest test=extent.createTest("hi");
+       test.pass("hello");
+    }
+    @AfterMethod
+    public void afterMethod(){
+        driver.quit();
+    }
+}
+//screenshot
+TakesScreenshot screenshot=(TakesScreenshot)driver;
+File source=screenshot.getScreenshotAs(OutPutType FILE);
+FileUtils.copyFile(source,new File(/name.png);
