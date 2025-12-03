@@ -246,3 +246,15 @@ public class TestRunner extends Base {
 TakesScreenshot screenshot=(TakesScreenshot)driver;
 File source=screenshot.getScreenshotAs(OutPutType FILE);
 FileUtils.copyFile(source,new File(/name.png);
+
+ // Alert with OK
+//     driver.findElement(By.xpath("//*[@id='OKTab']/button")).click();
+//     Alert alert = driver.switchTo().alert();
+//     alert.accept();
+//
+//     // Alert with OK & Cancel
+//     driver.findElement(By.xpath("//a[text()='Alert with OK & Cancel ']")).click();
+//     driver.findElement(By.xpath("//*[@id='CancelTab']/button")).click();
+//     Alert alert1 = driver.switchTo().alert();
+//     alert1.dismiss();
+    
